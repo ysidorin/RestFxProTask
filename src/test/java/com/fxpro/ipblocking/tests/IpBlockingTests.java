@@ -32,27 +32,15 @@ public class IpBlockingTests extends Helper {
                 .build();
     }
 
-    @After
-    public void CleanUpBlockedAddresses(){
-        System.out.println("Cleaned up addresses");
-    }
+//    @After
+//    public void CleanUpBlockedAddresses(){
+//        System.out.println("Cleaned up addresses");
+//    }
 
     @Test
     public void testBlockValidIp(){
         jsonAsString = getBlockingValidIpResponse(BLOCK).asString();
         assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
-    }
-
-    private Response getBlockingValidIpResponse(String block) {
-        return response =
-                given()
-                        .spec(spec)
-                        .when()
-                        .post(VALIDIP +"/" + block)
-                        .then()
-                        .statusCode(200)
-                        .extract()
-                        .response();
     }
 
     @Test

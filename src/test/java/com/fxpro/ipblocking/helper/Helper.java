@@ -1,8 +1,15 @@
 package com.fxpro.ipblocking.helper;
 
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+
 import java.util.Properties;
 
+import static io.restassured.RestAssured.given;
+
 public class Helper {
+    private static RequestSpecification spec;
+    public Response response;
 
     protected static final String VALIDIPLEFT = "0.0.0.0";
     protected static final String VALIDIP = "192.168.1.22";
@@ -18,6 +25,17 @@ public class Helper {
     public static final String INVALIDCOMMAND = "Command is not valid";
     public static final String WHITELISTEDIPCOMMAND = "The IP can't be blocked. It's in the whitelist.";
 
+    public Response getBlockingValidIpResponse(String block) {
+        return response =
+                given()
+                        .spec(spec)
+                        .when()
+                        .post(VALIDIP +"/" + block)
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+    }
     public String getPositiveResponseStringWithIp(String ipNum, String blocked){
         return IP + ipNum + blocked;
     }
