@@ -44,17 +44,20 @@ public class IpBlockingTests extends Helper {
 
     @Test
     public void testBlockValidIp(){
-        response =
+        jsonAsString = getBlockingValidIpResponse(BLOCK).asString();
+        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+    }
+
+    private Response getBlockingValidIpResponse(String block) {
+        return response =
                 given()
                         .spec(spec)
                         .when()
-                        .post(VALIDIP +"/block")
+                        .post(VALIDIP +"/" + block)
                         .then()
                         .statusCode(200)
                         .extract()
                         .response();
-        jsonAsString = response.asString();
-        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP));
     }
 
     @Test
@@ -89,17 +92,12 @@ public class IpBlockingTests extends Helper {
 
     @Test
     public void testRepeatBlockingIp(){
-        response =
-                given()
-                        .spec(spec)
-                        .when()
-                        .post( WHITELISTEDIP +"/block")
-                        .then()
-                        .statusCode(400)
-                        .extract()
-                        .response();
+        response = getBlockingValidIpResponse(BLOCK);
         jsonAsString = response.asString();
-        assertEquals(jsonAsString, Helper.WHITELISTEDIPCOMMAND);
+        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+        Response response2 = getBlockingValidIpResponse(BLOCKAGAIN);
+        String jsonAsString2 = response2.asString();
+        assertEquals(jsonAsString2, getPositiveResponseStringWithIp(VALIDIP, ALREADYBLOCKED));
     }
 
     @Test
