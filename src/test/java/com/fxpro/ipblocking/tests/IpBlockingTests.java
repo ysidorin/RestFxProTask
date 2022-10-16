@@ -26,7 +26,7 @@ public class IpBlockingTests extends Helper {
     public static void initSpec(){
         spec = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
-                .setBaseUri("http://localhost:8090/address")
+                .setBaseUri("http://host.docker.internal:8090/address")
                 .addFilter(new ResponseLoggingFilter())
                 .addFilter(new RequestLoggingFilter())
                 .build();
