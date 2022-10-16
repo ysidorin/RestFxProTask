@@ -4,7 +4,6 @@ import java.util.Properties;
 
 public class Helper {
 
-    public final Properties properties;
     protected static final String VALIDIPLEFT = "0.0.0.0";
     protected static final String VALIDIP = "192.168.1.22";
     protected static final String VALIDIPRIGHT = "255.255.255.255";
@@ -18,10 +17,6 @@ public class Helper {
     public static final String ISINVALID = " is invalid";
     public static final String INVALIDCOMMAND = "Command is not valid";
     public static final String WHITELISTEDIPCOMMAND = "The IP can't be blocked. It's in the whitelist.";
-
-    public Helper(Properties properties) {
-        this.properties = properties;
-    }
 
     public String getPositiveResponseStringWithIp(String ipNum, String blocked){
         return IP + ipNum + blocked;

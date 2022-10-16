@@ -1,4 +1,4 @@
-package com.fxpro.ipblocking.test;
+package com.fxpro.ipblocking.tests;
 
 import com.fxpro.ipblocking.helper.Helper;
 import io.restassured.builder.RequestSpecBuilder;
@@ -7,14 +7,13 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 
 public class IpBlockingTests extends Helper {
@@ -23,11 +22,7 @@ public class IpBlockingTests extends Helper {
     public Response response;
     public static String jsonAsString;
 
-    public IpBlockingTests(Properties properties) {
-        super(properties);
-    }
-
-    @BeforeAll
+    @BeforeClass
     public static void initSpec(){
         spec = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
@@ -37,8 +32,8 @@ public class IpBlockingTests extends Helper {
                 .build();
     }
 
-    @AfterEach
-    void CleanUpBlockedAddresses(){
+    @After
+    public void CleanUpBlockedAddresses(){
         System.out.println("Cleaned up addresses");
     }
 
