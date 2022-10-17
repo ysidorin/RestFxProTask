@@ -1,6 +1,5 @@
 package com.fxpro.ipblocking.helper;
 
-import java.util.Properties;
 
 public class Helper {
 
