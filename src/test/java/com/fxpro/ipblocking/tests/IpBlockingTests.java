@@ -114,4 +114,38 @@ public class IpBlockingTests extends Helper {
         assertEquals(jsonAsString, Helper.WHITELISTEDIPCOMMAND);
     }
 
+    @Test
+    public void testBlockingWithHeadersInRequest(){
+        response =
+                given()
+                        .spec(spec)
+                        .when()
+                        .contentType(ContentType.JSON)
+                        .accept(ContentType.JSON)
+                        .post( VALIDIP +"/block")
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+        jsonAsString = response.asString();
+        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+    }
+
+    @Test
+    public void testBlockingWithEmptyBodyInRequest() {
+        response =
+                given()
+                        .spec(spec)
+                        .when()
+                        .contentType(ContentType.JSON)
+                        .accept(ContentType.JSON)
+                        .body(REQUESTBODY)
+                        .post(VALIDIP + "/block")
+                        .then()
+                        .statusCode(200)
+                        .extract()
+                        .response();
+        jsonAsString = response.asString();
+        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+    }
 }
