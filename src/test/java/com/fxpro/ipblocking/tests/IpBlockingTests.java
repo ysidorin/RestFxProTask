@@ -9,18 +9,32 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
+
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 
 public class IpBlockingTests extends Helper {
 
+    Properties properties;
     private static RequestSpecification spec;
     public Response response;
     public static String jsonAsString;
+
+    public IpBlockingTests() throws IOException {
+        this.properties = new Properties();
+        properties.load(new FileReader(new File(String.format("src/test/resources/local.properties"))));
+    }
 
     @BeforeClass
     public static void initSpec(){
@@ -132,7 +146,7 @@ public class IpBlockingTests extends Helper {
     }
 
     @Test
-    public void testBlockingWithEmptyBodyInRequest() {
+    public void testBlockingWithBodyInRequest() {
         response =
                 given()
                         .spec(spec)
@@ -147,5 +161,20 @@ public class IpBlockingTests extends Helper {
                         .response();
         jsonAsString = response.asString();
         assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+    }
+
+    @Ignore
+    @Test
+    public void testBlockingPeriod() throws InterruptedException {
+        jsonAsString = getBlockingIpResponse(BLOCK, VALIDIP).asString();
+        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+        jsonAsString = getBlockingIpResponse(BLOCK, VALIDIP).asString();
+        assertNotEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+
+        Thread.sleep(Long.getLong(properties.getProperty("blocking.period.seconds")));
+
+        jsonAsString = getBlockingIpResponse(BLOCK, VALIDIP).asString();
+        assertEquals(jsonAsString, getPositiveResponseStringWithIp(VALIDIP, BLOCKED));
+
     }
 }
